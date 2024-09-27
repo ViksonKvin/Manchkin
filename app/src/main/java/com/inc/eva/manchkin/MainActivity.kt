@@ -1,47 +1,27 @@
 package com.inc.eva.manchkin
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.inc.eva.manchkin.ui.theme.ManchkinTheme
+import android.view.LayoutInflater
+import androidx.recyclerview.widget.GridLayoutManager
+import com.inc.eva.manchkin.databinding.ActivityMainBinding
 
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {
+
+    override val bindingInflater: (LayoutInflater) -> ActivityMainBinding
+        get() = ActivityMainBinding::inflate
+
+    val adapter by lazy { PlayersAdapter() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            ManchkinTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+
+        binding.listPlayers.adapter = adapter
+        binding.listPlayers.layoutManager = GridLayoutManager(this, 2)
+
+        binding.btnAddPlayer.setOnClickListener{
+            adapter.addItem(Player(binding.tvPlayerName.text.toString()))
         }
     }
+
+
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ManchkinTheme {
-        Greeting("Android")
-    }
-}
